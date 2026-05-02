@@ -1,18 +1,19 @@
 using Dapper;
+using Domain;
 using Infrastructure.Data;
 namespace Infrastructure.Services;
 public class AnaliticServices
 {
     private readonly DataContext context = new();
-    public async Task<List<Join>> GetAll()
+    public async Task<List<All>> GetAll()
     {
         using var connection = context.GetConnection();
         await connection.OpenAsync();
 
         var sql = @"select o.Id,c.Fullname,o.amount,o.created_at
-            from orders o
-            join customers c on o.customer_id=c.id";
-        var result = await connection.QueryAsync<Join>(sql);
+        from orders o
+        join customers c on c.id=o.customer_id";
+        var result = await connection.QueryAsync<All>(sql);
         return result.ToList();
     }
 
@@ -40,6 +41,3 @@ public class AnaliticServices
     }
 }
 
-internal class Join
-{
-}
